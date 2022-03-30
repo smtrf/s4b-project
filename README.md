@@ -11,3 +11,8 @@ In this project, I intend to develop python scripts that will:
 * Provide a GO enrichment analysis of those DEGs
 
 To complete these objectives, I anticipate the use of several scripts (at least one per objective) that will involve the use of external packages.
+
+
+## Box Folder
+
+Here is the link to the Box Folder with our data:
