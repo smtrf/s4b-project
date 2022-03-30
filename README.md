@@ -8,7 +8,6 @@ Next generation sequencing has provided opportunities to understand the molecula
 In this project, I intend to develop python scripts that will:
 * Align RNA-seq reads to a reference genome
 * Find differentially expressed genes (DEGs)
-* Provide a GO enrichment analysis of those DEGs
 
 To complete these objectives, I anticipate the use of several scripts (at least one per objective) that will involve the use of external packages.
 
