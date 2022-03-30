@@ -15,4 +15,4 @@ To complete these objectives, I anticipate the use of several scripts (at least 
 
 ## Box Folder
 
-Here is the link to the Box Folder with our data:
+Here is the link to the Box Folder with our data: https://auburn.box.com/s/x17154cah63h3yp4wd14ak6p0fa3t5jz
