@@ -23,13 +23,17 @@
 
 function check_quality {
 
-	module load fastqc/0.11.9 #loading the fastqc module
+	#input files: *.fastq.gz in ~/RNASeq_Data/Case and ../Control - hardcoded here, but this can be customized by the user.
+	#output files: *.html to be viewed in a web browser
+		#This file will be located in ~/RNASeq_Data/FastQC as specified in the code. This can be modified by the user if they choose.
+
+	module load fastqc/0.11.9 #loading the fastqc module from ASC
 
 	mkdir FastQC #make a new directory for output files
 	cd Case #move into the directory with the fastq files
-	fastqc *.fastqc -o ~/RNASeq_Data/FastQC #Use FastQC to perform a quality check of sequences
+	fastqc *.fastq.gz -o ~/s4b-project/RNASeq_Data/FastQC #Use FastQC to perform a quality check of sequences
 	cd ../Control #move into directory with the control fastq files
-	fastqc *.fastqc -o ~/RNASeq_Data/FastQC #Use FastQC to perform a quality check of sequences
+	fastqc *.fastq.gz -o ~/s4b-project/RNASeq_Data/FastQC #Use FastQC to perform a quality check of sequences
 
 }
 
