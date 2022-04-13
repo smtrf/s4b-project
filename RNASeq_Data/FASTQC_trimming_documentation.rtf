@@ -1,0 +1,107 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww18140\viewh11260\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 ####FASTQC and trimming information \
+\
+\
+# ----------------- Step 2 - Run FASTQC on untrimmed FASTQ files --------------\
+#Echo file list into fastqc code and saved as script, then ran script \
+\
+echo fastqc -o fastqc_results/ -f fastq *.fq >>  runFQC\
+\
+###MAKE SURE TO HAVE THE MODULE LOADED - include this in the runFQC script before running it\
+\
+#!/bin/bash\
+source /opt/asn/etc/asn-bash-profiles-special/modules.sh\
+module load fastqc/0.11.9\
+\
+#run 'runFQC'script -  output will be in .zip and .html file format within the fastqc_results directory \
+\
+#------------------- Step 3 - Count the reads of the untrimmed files--------------\
+\
+#!/usr/bin/perl\
+#module load\
+#  load the module\
+#source /opt/asn/etc/asn-bash-profiles-special/modules.sh\
+#module load anaconda/3-4.2.0_cent\
+\
+print "\
+\
+countreads.pl : counts the number of Illumina reads in a bunch of fastq files\
+argument - glob to fastq files, default \\.fastq\
+\
+";\
+\
+my $glob="\\.fq";\
+if ($ARGV[0]) \{ $glob=$ARGV[0];\}\
+\
+opendir THIS, ".";\
+my @fqs=grep /$glob/,readdir THIS;\
+my $f;\
+my $nrd;\
+foreach $f(@fqs)\{\
+        $nrd=`cat $f | wc -l`;\
+        $nrd=$nrd/4;\
+        print "$f\\t$nrd\\n";\
+\}\
+\
+#look at ASC output file for the read counts \
+\
+#---------------------------- Step 4 - Trim the files using Trim Galore! --------------------------\
+\
+#Clipped the first 10bp on 5' end because original trim was not trimming enough\
+\
+#!/bin/bash\
+#  load the module\
+source /opt/asn/etc/asn-bash-profiles-special/modules.sh\
+module load perl\
+module load trimgalore/0.6.6\
+module load anaconda/3-4.2.0_cent\
+\
+trim_galore --paired --clip_R1 10 --clip_R2 10 *_1.fq *_2.fq\
+\
+\
+#----------------------------- Step 5 - Run FASTQC on the trimmed files ---------------------------\
+#Output will save to the fastqc_results_trimgalore directory and will be in both a .zip and .html file format\
+\
+\
+#!/bin/bash\
+source /opt/asn/etc/asn-bash-profiles-special/modules.sh\
+module load fastqc/0.11.9\\\
+#\
+\
+echo fastqc -o fastqc_results_trimgalore/ -f fastq *.fq >> runFQCtrimgalore\
+\
+\
+#---------------------- Step 6 - Count the reads from the trimmed files ----------------------------\
+\
+#!/usr/bin/perl\
+#module load\
+#  load the module\
+#source /opt/asn/etc/asn-bash-profiles-special/modules.sh\
+#module load anaconda/3-4.2.0_cent\
+\
+print "\
+\
+countreads.pl : counts the number of Illumina reads in a bunch of fastq files\
+argument - glob to fastq files, default \\.fastq\
+\
+";\
+\
+my $glob="\\.fq";\
+if ($ARGV[0]) \{ $glob=$ARGV[0];\}\
+\
+opendir THIS, ".";\
+my @fqs=grep /$glob/,readdir THIS;\
+my $f;\
+my $nrd;\
+foreach $f(@fqs)\{\
+        $nrd=`cat $f | wc -l`;\
+        $nrd=$nrd/4;\
+        print "$f\\t$nrd\\n";\
+\}\
+}
