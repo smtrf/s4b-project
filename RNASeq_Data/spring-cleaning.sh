@@ -26,6 +26,9 @@ function check_quality {
 	#input files: *.fastq.gz in ~/RNASeq_Data/Case and ../Control - hardcoded here, but this can be customized by the user.
 	#output files: *.html to be viewed in a web browser
 		#This file will be located in ~/RNASeq_Data/FastQC as specified in the code. This can be modified by the user if they choose.
+	#Packages: FastQC
+
+	###############################################################################
 
 	module load fastqc/0.11.9 #loading the fastqc module from ASC
 
@@ -39,9 +42,27 @@ function check_quality {
 
 #2) Clean the reads by trimming
 
+function trim_reads {
+
+	#input files: *.fastq.gz in ~/RNASeq_Data/Case and ../Control - hardcoded here, but this can be customized by the user.
+        #output files: *_trimmed.fq files 
+	#packages: trimgalore
+		#trimgalore should cut sequences at illumina adapters
+
+	###############################################################################
+
+	module load trimgalore/0.6.6 #loading trimgalore module from ASC
+
+	cd Case #move into the directory with the fastq files
+        trim_galore --paired *R1.fastq.gz *R2.fastq.gz
+        cd ../Control #move into directory with the control fastq files
+	trim_galore --paired *R1.fastq.gz *R2.fastq.gz
+
+}
 
 function main {
-	check_quality /home/RNASeq_Data/
+#	check_quality /home/RNASeq_Data/
+	trim_reads /home/RNASeq_Data/
 }
 
 main
