@@ -5,12 +5,11 @@ Next generation sequencing has provided opportunities to understand the molecula
 
 ## Project Objectives
 
-In this project, I intend to develop python scripts that will:
-* Align RNA-seq reads to a reference genome
-* Find differentially expressed genes (DEGs)
+In this project, I intend to develop scripts that will:
+* Clean RNA-seq reads and align them to a reference genome (bash)
+* Find differentially expressed genes (DEGs) (R)
 
-To complete these objectives, I anticipate the use of several scripts (at least one per objective) that will involve the use of external packages.
-
+These analyses will consist of RNA-seq data extracted from the common mouse species, *Mus musculus*, that was exposed to two separate treatment groups. 
 
 ## Box Folder
 
