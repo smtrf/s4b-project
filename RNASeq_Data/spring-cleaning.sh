@@ -8,6 +8,8 @@
 ##############################RNA-seq Data Cleanup####################################
 ######################################################################################
 
+#RNA-seq data analysis to compare gene expression of two treatment groups of mice
+
 #In this script we will:
 	#Check the quality of the reads
 	#Clean reads
@@ -15,7 +17,7 @@
 	#Get read counts per gene
 	#Use the read counts to find differentially expressed genes (DEGs)
 
-#Packages: FastQC, TrimGalore, 
+#Packages: FastQC, TrimGalore, BowTie2, 
 
 ######################################################################################
 ######################################################################################
@@ -47,7 +49,7 @@ function quality_check {
 function trim_reads {
 
 	#input files: *.fastq.gz in ~/s4b-project/RNASeq_Data/Case and ../Control - hardcoded here, but this can be customized by the user.
-        #output files: *_trimmed.fq files 
+        #output files: *val_1.fq.gz (for R1) or *val_2.fq.gz (for R2) files 
 		#These files will be located in ~/s4b-project/RNASeq_Data/TrimmedReads
 	#packages: trimgalore
 		#trimgalore will automatically detect and cut sequences at illumina adapters
@@ -57,7 +59,7 @@ function trim_reads {
 	module load trimgalore/0.6.6 #loading trimgalore module from ASC
 
 	#making new directories in ~/s4b-project/RNASeq_Data for the trimmed data to be stored
-	mkdir TrimmedReads
+	mkdir TrimmedReads #create new
 	mkdir TrimmedReads/Case
 	mkdir TrimmedReads/Control
 
@@ -87,26 +89,45 @@ function qc_trimmed {
 
         #input files: *.fastq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user.
         #output files: *.html to be viewed in a web browser
-                #This file will be located in ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC as specified in the code. This can be modified by the user if th$
+                #This file will be located in ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC as specified in the code. This can be modified by the user if they need. 
         #Packages: FastQC
 
         ###############################################################################
 
         module load fastqc/0.11.9 #loading the fastqc module from ASC
 
-        mkdir trimmed-FastQC #make a new directory for output files
+        mkdir TrimmedReads/trimmed-FastQC #make a new directory for output files
         
-	cd Case #move into the directory with the fastq files
+	cd TrimmedReads/Case #move into the directory with the fastq files
         fastqc *.fq.gz -o ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC #Use FastQC to perform a quality check of sequences
         cd ../Control #move into directory with the control fastq files
         fastqc *.fq.gz -o ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC #Use FastQC to perform a quality check of sequences
+}
+
+#4) Align the reads to the genome
+
+function align_reads {
+
+	#input files: *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
+        #output files: 
+                #These files will be located in ~/s4b-project/RNASeq_Data/aligned as specified in the code. This can be customized by the user
+        #Packages: BowTie2
+
+        ###############################################################################
+
+	module load bowtie2/2.2.9
+
+	mkdir aligned #create new directory where aligned reads will be stored
+
+	
 
 }
 
 function main {
 #	quality_check /home/RNASeq_Data/
 #	trim_reads /home/RNASeq_Data/
-	qc_trimmed /home/RNASeq_Data/TrimmedReads
+	qc_trimmed /home/RNASeq_Data/
+#	align_reads /home/RNASeq_Data/
 }
 
 main
