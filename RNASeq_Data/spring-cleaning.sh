@@ -13,11 +13,11 @@
 #In this script we will:
 	#Check the quality of the reads
 	#Clean reads
-	#Map the reads to a genome
+	#Map the reads to a reference genome
 	#Get read counts per gene
 	#Use the read counts to find differentially expressed genes (DEGs)
 
-#Packages: FastQC, TrimGalore, BowTie2, 
+#Packages: FastQC, TrimGalore, STAR, 
 
 ######################################################################################
 ######################################################################################
@@ -111,23 +111,45 @@ function align_reads {
 	#input files: *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
         #output files: 
                 #These files will be located in ~/s4b-project/RNASeq_Data/aligned as specified in the code. This can be customized by the user
-        #Packages: BowTie2
+        #Packages: STAR (Spliced Transcripts Alignment to a Reference)
+		#requires 8 CPU cores and 30 gb memory to run
 
         ###############################################################################
 
-	module load bowtie2/2.2.9
+	source /opt/asn/etc/asn-bash-profiles-special/modules.sh
+	module load star/2.7.0e 
 
-	mkdir aligned #create new directory where aligned reads will be stored
+	#mkdir aligned #create new directory where aligned reads will be stored
 
+	###############################INDEXING GENOME#################################
+
+	#STAR --runThreadN ___ \\ number of cores
+	#--runMode genomeGenerate \\ genome mode
+	#--genomeDir ___ \\ path to the directory for output
+	#--genomeFastaFiles ___ \\ path to the FASTA files of the genome
+
+	###############################################################################
 	
+	STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --genomeFastaFiles /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
+	
+	###########################MAPPING GENOME TO INDEX#############################
+
+	#STAR --runThreadN ___ \\ number of cores
+        #--genomeDir ___ \\ path to the directory containing indexed genome
+        #--readFilesCommand zcat \\ tells STAR that files are gunzipped (.gz)
+	#--readFilesIn ___,___,___ \\ files to be mapped to genome separated by commas
+
+        ###############################################################################
+
+	#STAR --runThreadN 8 --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
 
 }
 
 function main {
 #	quality_check /home/RNASeq_Data/
 #	trim_reads /home/RNASeq_Data/
-	qc_trimmed /home/RNASeq_Data/
-#	align_reads /home/RNASeq_Data/
+#	qc_trimmed /home/RNASeq_Data/
+	align_reads /home/RNASeq_Data/
 }
 
 main
