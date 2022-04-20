@@ -5,7 +5,7 @@
 #Spring 2022
 
 ######################################################################################
-##############################RNA-seq Data Cleanup####################################
+############################# RNA-seq Data Cleanup ###################################
 ######################################################################################
 
 #RNA-seq data analysis to compare gene expression of two treatment groups of mice
@@ -103,16 +103,21 @@ function qc_trimmed {
         fastqc *.fq.gz -o ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC #Use FastQC to perform a quality check of sequences
         cd ../Control #move into directory with the control fastq files
         fastqc *.fq.gz -o ~/s4b-project/RNASeq_Data/TrimmedReads/trimmed-FastQC #Use FastQC to perform a quality check of sequences
+
 }
 
-#4) Align the reads to the genome
 
-function align_reads {
+#4) Index the genome
+#5) Align the reads to the genome
+#6) Count reads
+
+function mapping {
 
 	#input files: sequences to be mapped - *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
 		# genome to be indexed and mapped to - ./ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
-        #output files: Aligned.out.sam file with mapped sequences will be in RNASeq_Data directory along with Log files to document the quality of mapping 
-                #These files will be located in ~/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/ as specified in the code. This can be customized by the user
+        #output files: 
+		#Indexing Output: Log files that are useful for quality checking and debugging, SJ.out.tab (splice junctions), Genome, SAindexes, chrLengths
+		#Alignment Output: Aligned.out.sam file with mapped sequences will be in RNASeq_Data directory along with Log files to document the quality of mapping (Log files are very useful for quality control and debugging) 
         #Packages: STAR (Spliced Transcripts Alignment to a Reference)
 		#requires 8 CPU cores and 30 gb memory to run
 
@@ -130,33 +135,40 @@ function align_reads {
 
 	###############################################################################
 	
-	STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --genomeFastaFiles /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
+	#STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --genomeFastaFiles /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
 	
-	###########################MAPPING GENOME TO INDEX#############################
+	###########################MAPPING RNA-SEQ TO INDEX#############################
 
 	#STAR --runThreadN ___ \\ number of cores
         #--genomeDir ___ \\ path to the directory containing indexed genome
         #--readFilesCommand zcat \\ tells STAR that files are gunzipped (.gz)
 	#--readFilesIn ___,___,___ \\ files to be mapped to genome separated by commas
+	#--quantMode GeneCounts \\ tells STAR to count number reads per gene while mapping (a read is counted if it overlaps [1nt or more] one an donly one gene)
 
         ###############################################################################
 
-	STAR --runThreadN 8 --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
+	STAR --runThreadN 8 --quantMode GeneCounts --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
 
 }
 
-function count_reads {
-
-
-
-}
 
 function main {
-#	quality_check /home/RNASeq_Data/
-#	trim_reads /home/RNASeq_Data/
-#	qc_trimmed /home/RNASeq_Data/
-#	align_reads /home/RNASeq_Data/
+
+	#quality_check /home/aubars001/s4b-project/RNASeq_Data
+	#trim_reads /home/aubars001/s4b-project/RNASeq_Data
+	#qc_trimmed /home/aubars001/s4b-project/RNASeq_Data
+	mapping /home/aubars001/s4b-project/RNASeq_Data
 
 }
 
+#############################################################################################################################
+################################################## CODING REGION BELOW ######################################################
+#############################################################################################################################
+
+echo "Time to get our seq on!"
+
 main
+
+echo "We just got seq-y. CongRATS!"
+
+#That's a wrap!
