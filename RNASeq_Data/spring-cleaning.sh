@@ -114,7 +114,8 @@ function qc_trimmed {
 function mapping {
 
 	#input files: sequences to be mapped - *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
-		# genome to be indexed and mapped to - ./ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
+		# genome to be indexed and mapped to - ./Genome/GCA_000001635.9_GRCm39_genomic.fna
+			#and GTF file GCA_000001635.9_GRCm39_genomic.gtf
         #output files: 
 		#Indexing Output: Log files that are useful for quality checking and debugging, SJ.out.tab (splice junctions), Genome, SAindexes, chrLengths
 		#Alignment Output: Aligned.out.sam file with mapped sequences will be in RNASeq_Data directory along with Log files to document the quality of mapping (Log files are very useful for quality control and debugging) 
@@ -132,10 +133,12 @@ function mapping {
 	#--runMode genomeGenerate \\ genome mode
 	#--genomeDir ___ \\ path to the directory for output
 	#--genomeFastaFiles ___ \\ path to the FASTA files of the genome
+	#--sjdbGTFfile ___ \\ path to annotations.gtf file
+	#--sjdbOverhang 99 \\ read length -1 (based on cut adapters)
 
 	###############################################################################
 	
-	#STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --genomeFastaFiles /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
+	STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /home/aubars001/s4b-project/RNASeq_Data/Genome/Mapped --genomeFastaFiles /home/aubars001/s4b-project/RNASeq_Data/Genome/GCA_000001635.9_GRCm39_genomic.fna --sjdbGTFfile /home/aubars001/s4b-project/RNASeq_Data/Genome/GCA_000001635.9_GRCm39_genomic.gtf --sjdbOverhang 99
 	
 	###########################MAPPING RNA-SEQ TO INDEX#############################
 
@@ -147,7 +150,7 @@ function mapping {
 
         ###############################################################################
 
-	STAR --runThreadN 8 --quantMode GeneCounts --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
+	#STAR --runThreadN 8 --quantMode GeneCounts --genomeDir /home/aubars001/s4b-project/RNASeq_Data/Genome/Mapped --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
 
 }
 
