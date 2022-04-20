@@ -13,6 +13,7 @@
 #In this script we will:
 	#Check the quality of the reads
 	#Clean reads
+	#Index the genome
 	#Map the reads to a reference genome
 	#Get read counts per gene
 	#Use the read counts to find differentially expressed genes (DEGs)
@@ -108,9 +109,10 @@ function qc_trimmed {
 
 function align_reads {
 
-	#input files: *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
-        #output files: 
-                #These files will be located in ~/s4b-project/RNASeq_Data/aligned as specified in the code. This can be customized by the user
+	#input files: sequences to be mapped - *.fq.gz in ~/s4b-project/RNASeq_Data/TrimmedReads/Case and ../Control - hardcoded here, but this can be customized by the user of this script. 
+		# genome to be indexed and mapped to - ./ncbi-genomes-2022-04-19/GCF_000001635.27_GRCm39_genomic.fna
+        #output files: Aligned.out.sam file with mapped sequences will be in RNASeq_Data directory along with Log files to document the quality of mapping 
+                #These files will be located in ~/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19/ as specified in the code. This can be customized by the user
         #Packages: STAR (Spliced Transcripts Alignment to a Reference)
 		#requires 8 CPU cores and 30 gb memory to run
 
@@ -118,8 +120,6 @@ function align_reads {
 
 	source /opt/asn/etc/asn-bash-profiles-special/modules.sh
 	module load star/2.7.0e 
-
-	#mkdir aligned #create new directory where aligned reads will be stored
 
 	###############################INDEXING GENOME#################################
 
@@ -142,6 +142,12 @@ function align_reads {
         ###############################################################################
 
 	STAR --runThreadN 8 --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
+
+}
+
+function count_reads {
+
+
 
 }
 
