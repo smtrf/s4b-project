@@ -141,7 +141,7 @@ function align_reads {
 
         ###############################################################################
 
-	#STAR --runThreadN 8 --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
+	STAR --runThreadN 8 --genomeDir /home/aubars001/s4b-project/RNASeq_Data/ncbi-genomes-2022-04-19 --readFilesCommand zcat --readFilesIn /home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Case/4040-KH-21.4040-KH-21_0_filtered_R2_val_2.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R1_val_1.fq.gz,/home/aubars001/s4b-project/RNASeq_Data/TrimmedReads/Control/4040-KH-18.4040-KH-18_0_filtered_R2_val_2.fq.gz
 
 }
 
@@ -149,7 +149,8 @@ function main {
 #	quality_check /home/RNASeq_Data/
 #	trim_reads /home/RNASeq_Data/
 #	qc_trimmed /home/RNASeq_Data/
-	align_reads /home/RNASeq_Data/
+#	align_reads /home/RNASeq_Data/
+
 }
 
 main
